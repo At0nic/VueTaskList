@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seznam úkolů</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <style>
+        .completed {
+            text-decoration: line-through;
+            color: gray;
+        }
+        button {
+            margin-left: 10px;
+        }
+        .list-enter-active, .list-leave-active {
+            transition: opacity 0.5s;
+        }
+        .list-enter, .list-leave-to {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>Seznam úkolů</h1>
+        
+        <!-- Vstup pro přidání úkolu -->
+        <input v-model="newTask" @keyup.enter="addTask" placeholder="Přidat nový úkol">
+
+        <!-- Filtry pro zobrazení úkolů -->
+        <div>
+            <button @click="filter = 'all'">Vše</button>
+            <button @click="filter = 'active'">Aktivní</button>
+            <button @click="filter = 'completed'">Dokončené</button>
+        </div>
+
+        <!-- Seznam úkolů -->
+        <transition-group name="list" tag="ul">
+            <li v-for="task in filteredTasks" :key="task.id" :class="{ completed: task.completed }">
+                <input type="checkbox" v-model="task.completed" @change="toggleTaskCompletion(task.id)">
+                <span>{{ task.text }}</span>
+                <button @click="removeTask(task.id)">Smazat</button>
+            </li>
+        </transition-group>
+
+        <!-- Počet nedokončených úkolů -->
+        <p>{{ incompleteTasks }} úkol(y) k dokončení</p>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
